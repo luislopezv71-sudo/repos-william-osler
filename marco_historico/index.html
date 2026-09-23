@@ -1,1 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Ruta de ocho pasos por área para construir el marco histórico de la tesina con Perplexity.">
+<meta name="author" content="Luis Arturo López Vergara">
+<title>Marco histórico con Perplexity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;0,700;1,400&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<style>
+:root{
+  --ink:#16222a; --petrol:#14343F; --petrol-2:#1D4A57; --head:#14343F;
+  --ochre:#9A6B1E; --ochre-soft:#C49A4A;
+  --paper:#F4F1E9; --surface:#FFFFFF; --bg:#EFEDE6;
+  --line:#D6D2C6; --muted:#5F5C54; --teal:#1E6F7A; --err:#A3321E;
+  --on-accent:#FFFFFF; --on-petrol:#F4F1E9;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#E8E5DC; --petrol:#9FC4CE; --petrol-2:#7FAAB6; --head:#122A33; --ochre:#D9A94F; --ochre-soft:#B88B3A;
+    --paper:#1B2429; --surface:#141B20; --bg:#0F1519; --line:#2C373D; --muted:#9BA5A9; --teal:#6FB5BF; --err:#E58B72;
+    --on-accent:#0F1519; --on-petrol:#0F1519;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#E8E5DC; --petrol:#9FC4CE; --petrol-2:#7FAAB6; --head:#122A33; --ochre:#D9A94F; --ochre-soft:#B88B3A;
+  --paper:#1B2429; --surface:#141B20; --bg:#0F1519; --line:#2C373D; --muted:#9BA5A9; --teal:#6FB5BF; --err:#E58B72;
+  --on-accent:#0F1519; --on-petrol:#0F1519;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:0 80px}
 
+header.top{background:var(--head);padding-block:38px 32px;margin-bottom:28px}
+header.top .wrap{padding-block:0}
+.tag{font-size:12.5px;letter-spacing:.06em;color:#C49A4A;margin-bottom:10px;font-weight:600;text-transform:uppercase}
+h1{font-family:"Spectral",Georgia,serif;font-weight:700;font-size:clamp(28px,4.4vw,42px);line-height:1.1;margin:0 0 10px;color:#F4F1E9;text-wrap:balance}
+header.top p{margin:0;max-width:66ch;color:#C8D6DA;font-size:15.5px}
+
+.grid{display:grid;grid-template-columns:300px 1fr;gap:28px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:1fr;gap:20px}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);display:flex;flex-direction:column;gap:18px}
+@media (max-width:900px){aside{position:static}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:22px}
+.lbl{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 10px}
+
+select{width:100%;font:inherit;font-size:14.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:2px;padding:9px 10px}
+.progress{display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 8px;font-size:13px;color:var(--muted)}
+.progress b{font-family:"Spectral",Georgia,serif;font-size:20px;color:var(--ink);font-variant-numeric:tabular-nums}
+.bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ochre);width:0;transition:width .25s}
+
+ol.ruta{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
+.paso{width:100%;display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:start;text-align:left;font:inherit;font-size:13.5px;line-height:1.35;padding:9px 10px;border:0;border-radius:2px;background:transparent;color:var(--ink);cursor:pointer}
+.paso:hover{background:var(--paper)}
+.paso[aria-current="step"]{background:var(--paper);box-shadow:inset 3px 0 0 var(--ochre)}
+.paso .n{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.paso.hecho .n{background:var(--teal);border-color:var(--teal);color:var(--on-accent)}
+.paso[aria-current="step"] .n{border-color:var(--ochre);color:var(--ochre)}
+.paso.hecho[aria-current="step"] .n{color:var(--on-accent)}
+.paso small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+
+.eyebrow{font-family:"Spectral",Georgia,serif;font-style:italic;color:var(--ochre);font-size:15px;margin:0 0 4px}
+h2{font-family:"Spectral",Georgia,serif;font-size:clamp(22px,3vw,28px);font-weight:600;margin:0 0 10px;color:var(--petrol);line-height:1.2;text-wrap:balance}
+h3{font-family:"Spectral",Georgia,serif;font-size:18px;font-weight:600;margin:0 0 6px;color:var(--petrol)}
+p.lead{margin:0 0 18px;max-width:66ch}
+p.hint{color:var(--muted);font-size:14px;margin:0 0 14px;max-width:66ch}
+
+.fichas{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.ficha{font-size:12.5px;padding:5px 10px;border:1px solid var(--line);border-radius:2px;background:var(--paper)}
+.ficha b{font-weight:600}
+.doms{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--teal);word-break:break-word;margin:-10px 0 20px}
+
+ol.haz{margin:0 0 22px;padding-left:22px;font-size:14.5px;max-width:70ch}
+ol.haz li{margin-bottom:6px}
+ol.haz li::marker{color:var(--ochre);font-weight:700}
+
+.prompt{border:1px solid var(--line);border-radius:3px;margin-bottom:16px;overflow:hidden}
+.prompt-h{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--paper);border-bottom:1px solid var(--line)}
+.prompt-h strong{font-size:14px}
+.prompt-h .modo{font-size:12px;color:var(--teal);font-weight:600}
+.out{padding:14px 16px;font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;font-size:12.4px;line-height:1.6;white-space:pre-wrap;word-break:break-word;max-height:340px;overflow:auto;margin:0;background:var(--surface);color:var(--ink)}
+details.alt{margin:-4px 0 18px;font-size:14px}
+details.alt summary{cursor:pointer;color:var(--muted)}
+details.alt .prompt{margin-top:10px}
+
+.listo{background:var(--paper);border-left:3px solid var(--teal);padding:12px 15px;margin:4px 0 20px;font-size:14px}
+.listo ul{margin:6px 0 0;padding-left:18px}
+.listo li{margin-bottom:3px}
+
+.actions{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.btn{font:inherit;font-size:14px;font-weight:600;padding:10px 17px;border-radius:2px;cursor:pointer;border:1px solid var(--petrol);background:var(--petrol);color:var(--on-petrol)}
+.btn:hover{background:var(--petrol-2);border-color:var(--petrol-2)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ochre)}
+.btn.sm{font-size:12.5px;padding:6px 11px}
+.btn.ok{background:var(--ochre);border-color:var(--ochre);color:var(--on-accent)}
+.btn.ok:hover{background:var(--ochre-soft);border-color:var(--ochre-soft)}
+.btn:disabled{opacity:.45;cursor:default}
+.spacer{flex:1}
+.status{font-size:13.5px;color:var(--muted);min-height:20px;margin-top:10px}
+.status.ok{color:var(--teal);font-weight:500}
+.status.err{color:var(--err);font-weight:500}
+
+.drop{border:1.5px dashed var(--line);border-radius:3px;padding:22px 18px;text-align:center;background:var(--paper)}
+.drop.over{border-color:var(--ochre)}
+.drop strong{display:block;font-size:15px;margin-bottom:4px}
+.drop span{color:var(--muted);font-size:13.5px}
+.drop .btn{margin-top:12px}
+.or{display:flex;align-items:center;gap:12px;margin:16px 0 10px;color:var(--muted);font-size:13px}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+label{display:block;font-size:13px;font-weight:600;margin:14px 0 5px}
+input[type=text],textarea{width:100%;font:inherit;font-size:14.5px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:2px;padding:9px 11px}
+textarea{resize:vertical;line-height:1.5}
+input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.two{grid-template-columns:1fr}}
+
+.warn{border-left:3px solid var(--ochre);padding:4px 0 4px 14px;font-size:13.5px;color:var(--muted)}
+.warn strong{display:block;color:var(--ink);font-family:"Spectral",Georgia,serif;font-size:15px;margin-bottom:2px}
+.verif textarea{margin-bottom:10px}
+
+.meta{margin-top:34px;border-top:1px solid var(--line);padding-top:18px;font-size:12.5px;color:var(--muted)}
+.meta dl{display:grid;grid-template-columns:auto 1fr;gap:3px 16px;margin:8px 0 0}
+.meta dt{font-weight:600;color:var(--ink)}
+.meta dd{margin:0;word-break:break-word}
+@media (max-width:560px){.meta dl{grid-template-columns:1fr;gap:1px}.meta dd{margin-bottom:7px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="tag">Apoyo a la asesoría de tesina · Capítulo I</div>
+    <h1>Marco histórico con Perplexity</h1>
+    <p>Una ruta de ocho pasos por área. Cada paso trae lo que hay que hacer, el prompt listo para copiar y cómo saber que ya terminaste. Se avanza en orden: datos, Space, cinco bloques históricos y el ensamble del capítulo.</p>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="grid">
+  <aside>
+    <div class="card">
+      <p class="lbl">Área de la tesina</p>
+      <select id="area" aria-label="Área de la tesina"></select>
+      <div class="progress"><span>Avance de la ruta</span><b id="pct">0/8</b></div>
+      <div class="bar"><i id="barra"></i></div>
+      <ol class="ruta" id="ruta"></ol>
+    </div>
+    <div class="card verif">
+      <p class="lbl">Verificar un dato</p>
+      <p class="hint" style="font-size:13px">Úsalo en cualquier paso cuando dudes de una fecha, reforma o cita.</p>
+      <textarea id="dato" rows="3" placeholder="Ej.: La Ley General de Salud se publicó en el DOF el 7 de febrero de 1984"></textarea>
+      <button class="btn ghost sm" id="verifBtn" type="button">Generar prompt de verificación</button>
+    </div>
+  </aside>
+
+  <main class="card" id="main" aria-live="polite"></main>
+</div>
+
+<div class="meta">
+  <strong>Control de metadatos</strong>
+  <dl>
+    <dt>IA utilizada</dt><dd>Claude (Anthropic) para el desarrollo; Perplexity para la investigación documental</dd>
+    <dt>Catedrático / Autor</dt><dd>Luis Arturo López Vergara</dd>
+    <dt>Correo electrónico</dt><dd>luislopezv71@gmail.com</dd>
+    <dt>Fecha de desarrollo</dt><dd>18 de septiembre de 2026 · versión 2 (ruta por áreas): 23 de septiembre de 2026</dd>
+    <dt>Identificador único</dt><dd id="uid">marco-historico-CESA-2026-APP-V2</dd>
+  </dl>
+</div>
+</div>
+
+<script>
+/* bloques: {t: título, r: qué reconstruye, f: fuentes Perplexity, s: sitios, k: fuentes clave, ok: listo cuando} */
+var AREAS={
+ derecho:{nombre:"Derecho",bloques:[
+  {t:"Antecedentes remotos y recepción en México",r:"Dónde nace la figura jurídica que estudias y cómo llega al derecho mexicano: derecho romano e hispano, etapa colonial y códigos del siglo XIX.",f:"Académico",s:"juridicas.unam.mx, archivos.juridicas.unam.mx, dialnet.unirioja.es, scielo.org.mx, biblioteca.diputados.gob.mx",k:"Derecho romano; Las Siete Partidas; Códigos Civiles de 1870 y 1884",ok:["Sabes en qué ordenamiento aparece por primera vez la figura","Tienes al menos una fuente de historia del derecho mexicano"]},
+  {t:"Constitución y ley que hoy rige",r:"Cuándo el tema adquiere rango constitucional y cuándo se expidió la ley o el código vigente, con qué exposición de motivos.",f:"Web",s:"diputados.gob.mx, dof.gob.mx, constitucion1917.gob.mx, sitios.scjn.gob.mx, congresogro.gob.mx",k:"Constituciones de 1857 y 1917; decreto de expedición; exposición de motivos",ok:["Tienes la fecha de publicación de la ley vigente en el DOF o periódico oficial","Puedes explicar qué problema buscaba resolver"]},
+  {t:"Reformas y criterios de los tribunales",r:"Qué reformas sufrió el texto aplicable, en qué fechas y por qué, y cómo cambiaron los criterios del Poder Judicial.",f:"Web",s:"diputados.gob.mx, dof.gob.mx, sjf.scjn.gob.mx, bj.scjn.gob.mx",k:"Historial oficial de reformas; Semanario Judicial de la Federación por época",ok:["Tienes la lista fechada de reformas al artículo que estudias","Tienes al menos una tesis o jurisprudencia con su registro digital"]},
+  {t:"Contexto social y referente comparado",r:"Qué condiciones sociales explican los cambios normativos y cómo resolvió lo mismo algún otro país.",f:"Académico",s:"inegi.org.mx, historicas.unam.mx, dialnet.unirioja.es, boe.es, leychile.cl",k:"Estadística histórica; estudios de derecho comparado",ok:["Cada reforma importante tiene una causa social explicada","Tienes un solo país de comparación, bien documentado"]},
+  {t:"Situación actual y problemas heredados",r:"En qué punto está hoy la figura en tu ámbito y qué problemas sin resolver dejó su trayectoria.",f:"Web",s:"congresogro.gob.mx, sjf.scjn.gob.mx, sil.gobernacion.gob.mx, juridicas.unam.mx",k:"Doctrina reciente; jurisprudencia vigente; iniciativas en trámite",ok:["El bloque termina conectando con tu pregunta de investigación"]}
+ ]},
+ administracion:{nombre:"Administración y Contaduría",bloques:[
+  {t:"Origen de la práctica y escuelas administrativas",r:"Dónde aparece la práctica que estudias y qué escuelas la abordaron, en orden.",f:"Académico",s:"scielo.org.mx, redalyc.org, dialnet.unirioja.es, jstor.org",k:"Taylor, Fayol, relaciones humanas, sistemas, contingencia, calidad total",ok:["Sabes qué autor o escuela formuló primero la práctica","Tienes la sucesión de escuelas con fechas"]},
+  {t:"Llegada a México y contexto económico",r:"Cuándo entra la práctica a las organizaciones mexicanas y qué crisis o reformas la aceleraron.",f:"Académico",s:"scielo.org.mx, redalyc.org, cepal.org, banxico.org.mx",k:"Sustitución de importaciones; apertura comercial; crisis de 1982, 1994, 2008 y 2020",ok:["Puedes ubicar la llegada de la práctica en una década concreta","Cada cambio tiene su causa económica"]},
+  {t:"Marco normativo y evolución del sector",r:"Qué reglas rigen la práctica (laborales, fiscales, técnicas) y cómo cambió el sector económico donde está la organización.",f:"Web",s:"diputados.gob.mx, dof.gob.mx, cinif.org.mx, stps.gob.mx, inegi.org.mx",k:"LFT de 1931 y 1970 y reformas; NIF; normas ISO; censos económicos",ok:["Tienes las fechas de las normas que aplican","Tienes al menos un dato censal del sector"]},
+  {t:"Trayectoria local o de la organización",r:"Fundación, crecimiento y crisis de la organización o del sector en tu localidad.",f:"Web",s:"inegi.org.mx, datos.gob.mx, plataformadetransparencia.org.mx, gob.mx",k:"Actas constitutivas; informes; portales de transparencia; prensa local",ok:["Hay una línea de tiempo de la organización o del sector local","Los datos locales tienen fuente, no vienen de memoria"]},
+  {t:"Situación actual y herencia del pasado",r:"Dónde está hoy la práctica y qué inercias del pasado siguen operando.",f:"Académico",s:"scielo.org.mx, redalyc.org, oecd.org, inegi.org.mx",k:"Literatura reciente; diagnósticos sectoriales; indicadores actuales",ok:["El bloque termina conectando con tu pregunta de investigación"]}
+ ]},
+ educacion:{nombre:"Ciencias de la Educación",bloques:[
+  {t:"Origen del problema y corrientes pedagógicas",r:"Quién formuló primero la preocupación pedagógica que estudias y qué corrientes la retomaron, en orden.",f:"Académico",s:"scielo.org.mx, redalyc.org, dialnet.unirioja.es, eric.ed.gov",k:"Comenio, Rousseau, Pestalozzi; escuela nueva, conductismo, constructivismo, competencias",ok:["Sabes qué autor originó el tema","Tienes la sucesión de corrientes con fechas"]},
+  {t:"Sistema educativo mexicano y artículo 3º",r:"Cómo entra el tema a la educación nacional desde la SEP y qué reformas constitucionales lo modificaron.",f:"Web",s:"sep.gob.mx, diputados.gob.mx, dof.gob.mx, historicas.unam.mx",k:"SEP de 1921; reformas al artículo 3º de 1934, 1946, 1993, 2013 y 2019; Ley General de Educación",ok:["Tienes las reformas al artículo 3º que tocan tu tema, con fecha del DOF"]},
+  {t:"Planes de estudio y práctica en el aula",r:"Cómo cambió el currículo y la práctica docente en el nivel educativo que investigas.",f:"Web",s:"sep.gob.mx, dof.gob.mx, mejoredu.gob.mx, comie.org.mx",k:"Planes de 1993, 2011 y 2017; Nueva Escuela Mexicana",ok:["Puedes comparar qué se hacía antes y qué se hace ahora en tu nivel"]},
+  {t:"Referentes internacionales y contexto social",r:"Qué recomendaron los organismos internacionales y qué condiciones sociales motivaron cada reforma.",f:"Web",s:"unesco.org, oecd.org, oei.int, inegi.org.mx",k:"UNESCO y OCDE; series de PISA; estadística educativa",ok:["Cada reforma tiene su causa social o internacional explicada"]},
+  {t:"Situación actual y pendientes",r:"Dónde está hoy el problema en tu ámbito y qué dejó sin resolver la historia de reformas.",f:"Web",s:"mejoredu.gob.mx, scielo.org.mx, sep.gob.mx, comie.org.mx",k:"Diagnósticos de Mejoredu; investigación educativa reciente",ok:["El bloque termina conectando con tu pregunta de investigación"]}
+ ]},
+ psicologia:{nombre:"Psicología",bloques:[
+  {t:"Origen del constructo y escuelas psicológicas",r:"Cuándo se nombró el fenómeno por primera vez y qué escuelas lo explicaron, en orden.",f:"Académico",s:"psycnet.apa.org, scielo.org.mx, redalyc.org, dialnet.unirioja.es",k:"Primeras descripciones; psicoanálisis, conductismo, humanismo, cognitivismo",ok:["Sabes quién describió el fenómeno y en qué año","Tienes la sucesión de escuelas"]},
+  {t:"Medición y criterios diagnósticos",r:"Con qué instrumentos se midió el fenómeno y cómo cambió su clasificación entre ediciones.",f:"Académico",s:"psycnet.apa.org, pubmed.ncbi.nlm.nih.gov, icd.who.int, psychiatry.org",k:"Instrumentos y sus versiones; del DSM-I al DSM-5-TR; de la CIE-6 a la CIE-11",ok:["Tienes el instrumento que usarás y su historia de versiones"]},
+  {t:"La psicología en México e intervención",r:"Cómo se profesionalizó la disciplina en el país y cómo cambiaron las técnicas de intervención sobre el fenómeno.",f:"Académico",s:"psicologia.unam.mx, scielo.org.mx, redalyc.org, cochranelibrary.com",k:"Facultad de Psicología de la UNAM; protocolos por generación terapéutica",ok:["Puedes comparar la intervención de antes con la de ahora"]},
+  {t:"Ética, regulación y contexto social",r:"Qué reglas éticas obligan al investigador y qué condiciones sociales volvieron relevante el fenómeno.",f:"Web",s:"apa.org, dof.gob.mx, stps.gob.mx, inegi.org.mx",k:"Código de Núremberg; Declaración de Helsinki; Código Ético del Psicólogo; NOM-035-STPS",ok:["Tienes la norma o código ético que aplica a tu estudio","Hay al menos un dato estadístico del contexto"]},
+  {t:"Estado actual y debates abiertos",r:"Qué se discute hoy sobre el fenómeno y qué preguntas siguen sin respuesta.",f:"Académico",s:"pubmed.ncbi.nlm.nih.gov, psycnet.apa.org, scielo.org.mx, cochranelibrary.com",k:"Revisiones sistemáticas y metaanálisis recientes",ok:["El bloque termina conectando con tu pregunta de investigación"]}
+ ]},
+ salud:{nombre:"Ciencias de la Salud y Enfermería",bloques:[
+  {t:"Origen del problema y conocimiento clínico",r:"Cuándo se identificó el problema de salud y cómo cambió su comprensión con la evidencia.",f:"Académico",s:"pubmed.ncbi.nlm.nih.gov, scielo.org.mx, cochranelibrary.com, who.int",k:"Primeras descripciones; hitos de investigación clínica",ok:["Sabes cuándo y cómo se describió el problema","Tienes los hitos clínicos con fecha"]},
+  {t:"El sistema de salud mexicano ante el problema",r:"Cómo se organizó la atención del problema en las instituciones del país.",f:"Web",s:"gob.mx, imss.gob.mx, salud.gob.mx, scielo.org.mx",k:"Departamento de Salubridad de 1917; IMSS 1943; ISSSTE 1959; Seguro Popular; IMSS-Bienestar",ok:["Tienes la línea de tiempo institucional que toca tu tema"]},
+  {t:"Normatividad y guías de práctica",r:"Qué leyes, NOM y guías de práctica clínica regulan la atención, y cómo cambiaron entre versiones.",f:"Web",s:"diputados.gob.mx, dof.gob.mx, cenetec.salud.gob.mx, imss.gob.mx",k:"Ley General de Salud de 1984 y reformas; NOM sucesivas; GPC del CENETEC",ok:["Tienes la NOM o GPC vigente y la versión anterior"]},
+  {t:"Modelos de cuidado y evidencia internacional",r:"Cómo se profesionalizó la disciplina y qué recomendaron la OMS y la OPS a lo largo del tiempo.",f:"Académico",s:"scielo.org.mx, who.int, paho.org, pubmed.ncbi.nlm.nih.gov",k:"De Nightingale a los modelos contemporáneos; series de la OMS y la OPS",ok:["Tienes el modelo de cuidado que sustenta tu tesina y su origen"]},
+  {t:"Contexto epidemiológico y retos actuales",r:"Cómo se comportó el problema en la población y qué rezagos siguen hoy en tu ámbito.",f:"Web",s:"inegi.org.mx, ensanut.insp.mx, gob.mx, paho.org",k:"Series de morbilidad y mortalidad; ENSANUT; informes recientes",ok:["Tienes al menos un dato epidemiológico reciente con fuente","El bloque termina conectando con tu pregunta de investigación"]}
+ ]}
+};
+
+var PALABRAS={
+ derecho:["ley","artículo","constitución","jurídic","código","jurisprudencia","scjn","reforma","decreto","prescripción","amparo","tribunal","penal","civil","laboral","derecho"],
+ administracion:["administra","empresa","organizacion","recursos humanos","reclutamiento","contab","financ","mercado","proceso","calidad","gestión","productividad","ventas","liderazgo"],
+ educacion:["educa","docent","alumno","aprendizaje","curricul","escuela","enseñanza","didáctic","bachillerato","pedagog","estudiantes"],
+ psicologia:["psicolog","conducta","ansiedad","depresión","emocional","cognitiv","terapia","autoestima","estrés","personalidad"],
+ salud:["salud","enferm","paciente","clínic","hospital","médic","cuidado","nutric","epidemi","tratamiento"]
+};
+
+var campos=["tema","pregunta","general","especificos","espacial","temporal","institucion","alumno"];
+var KEY="gmh.perplexity.v2";
+var st={area:"derecho",paso:0,hechos:{},datos:{}};
+function $(id){return document.getElementById(id);}
+function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+
+/* ---------- ruta ---------- */
+function pasos(){
+  var a=AREAS[st.area],p=[{id:"datos",t:"Tus datos",s:"Anteproyecto y delimitación"},{id:"space",t:"Preparar el Space",s:"Una sola vez"}];
+  a.bloques.forEach(function(b,i){p.push({id:"b"+i,t:b.t,s:"Bloque "+(i+1)+" de 5",b:i});});
+  p.push({id:"cierre",t:"Ensamblar el capítulo",s:"Introducción, cierre y referencias"});
+  return p;
+}
+function hechos(){return st.hechos[st.area]||(st.hechos[st.area]={});}
+
+function pintarRuta(){
+  var r=$("ruta");r.innerHTML="";
+  var P=pasos(),h=hechos(),n=0;
+  P.forEach(function(p,i){
+    if(h[p.id])n++;
+    var li=el("li"),b=el("button","paso"+(h[p.id]?" hecho":""));
+    b.type="button";
+    if(i===st.paso)b.setAttribute("aria-current","step");
+    var num=el("span","n",h[p.id]?"✓":String(i+1));
+    var tx=el("span",null,p.t);tx.appendChild(el("small",null,p.s));
+    b.appendChild(num);b.appendChild(tx);
+    b.onclick=function(){st.paso=i;guardar();pintar();};
+    li.appendChild(b);r.appendChild(li);
+  });
+  $("pct").textContent=n+"/"+P.length;
+  $("barra").style.width=(n/P.length*100)+"%";
+}
+
+/* ---------- datos ---------- */
+function D(){
+  var d=st.datos;
+  return{tema:(d.tema||"").trim()||"[escribe tu tema]",pregunta:(d.pregunta||"").trim()||"[escribe tu pregunta de investigación]",
+   general:(d.general||"").trim()||"[escribe tu objetivo general]",especificos:(d.especificos||"").trim(),
+   espacial:(d.espacial||"").trim()||"[lugar]",temporal:(d.temporal||"").trim()||"[periodo]",
+   institucion:(d.institucion||"").trim()||"CESA",alumno:(d.alumno||"").trim()};
+}
+function contexto(){
+  var d=D();
+  return "Tema: "+d.tema+"\nPregunta: "+d.pregunta+"\nÁmbito: "+d.espacial+" · Periodo de análisis: "+d.temporal+
+    "\nNivel: tesina de licenciatura en "+AREAS[st.area].nombre+". Capítulo: marco histórico.\n";
+}
+
+/* ---------- prompts ---------- */
+function pBuscar(b,i){
+  return "Bloque "+(i+1)+" de 5 de mi marco histórico: "+b.t+".\n\n"+contexto()+"\n"+
+  "Necesito reconstruir: "+b.r+"\n"+
+  "Fuentes clave a considerar: "+b.k+".\n"+
+  "Prioriza estos sitios: "+b.s+".\n\n"+
+  "Entrégame máximo 6 fuentes, en orden cronológico. Para cada una:\n"+
+  "  · Cita completa en APA 7 y enlace directo\n"+
+  "  · Fecha exacta del hecho o documento\n"+
+  "  · Dos líneas sobre qué cambió en ese momento y por qué\n\n"+
+  "No incluyas fuentes cuyo enlace no puedas verificar.\n"+
+  "Si una fecha es discutida entre autores, dilo en lugar de elegir una.\n";
+}
+function pRedactar(b,i){
+  var sig=AREAS[st.area].bloques[i+1];
+  return "Con las fuentes que acabas de darme, redacta el bloque "+(i+1)+" de mi marco histórico: "+b.t+".\n\n"+
+  "  · Entre 500 y 700 palabras, prosa académica en tercera persona.\n"+
+  "  · Orden cronológico, sin viñetas ni listas.\n"+
+  "  · Cada fecha con su cita APA 7 dentro del texto.\n"+
+  "  · Explica qué provocó cada cambio; no basta con enunciarlo.\n"+
+  (sig?"  · Cierra con una oración que abra el siguiente bloque: "+sig.t+".\n":"  · Cierra conectando con mi pregunta de investigación.\n")+
+  "  · Usa solo las fuentes de esta conversación; no agregues otras.\n"+
+  "  · Al final, la lista de referencias en APA 7.\n\n"+
+  "Marca entre [corchetes] cualquier afirmación que no esté respaldada por esas fuentes.\n";
+}
+function pDeep(b,i){
+  return "Elabora un informe sobre este tema para el bloque "+(i+1)+" de mi marco histórico: "+b.t+".\n\n"+contexto()+"\n"+
+  "Debe reconstruir: "+b.r+"\nFuentes clave: "+b.k+".\nPrioriza: "+b.s+".\n\n"+
+  "Estructura:\n  1. Cronología fechada, aplicada a "+D().espacial+" cuando sea posible.\n"+
+  "  2. Qué provocó cada cambio, con su fuente.\n  3. Discrepancias de fechas entre autores.\n"+
+  "  4. Referencias APA 7 con enlace.\n\nDistingue el hecho documentado de la interpretación del autor.\n";
+}
+function pSpace(){
+  var d=D(),a=AREAS[st.area];
+  var t="Estoy escribiendo el marco histórico de una tesina de licenciatura en "+a.nombre+" en "+d.institucion+".\n\n"+
+  "Tema: "+d.tema+"\nPregunta de investigación: "+d.pregunta+"\nObjetivo general: "+d.general+"\n"+
+  "Ámbito: "+d.espacial+" · Periodo de análisis: "+d.temporal+"\n"+(d.alumno?"Autor: "+d.alumno+"\n":"")+
+  "\nEl capítulo tiene cinco bloques cronológicos:\n";
+  a.bloques.forEach(function(b,i){t+="  "+(i+1)+". "+b.t+"\n";});
+  t+="\nEn todas tus respuestas:\n"+
+  "  · Cita en APA 7 con el enlace de cada fuente.\n"+
+  "  · Da la fecha exacta de cada hecho; nunca una aproximación.\n"+
+  "  · Si una fecha es discutida, dilo en lugar de elegir una.\n"+
+  "  · Prioriza documentos originales sobre obras que los comentan.\n"+
+  "  · Si no encuentras fuente confiable, dilo en lugar de suponer.\n"+
+  "  · Responde en español académico de México.\n";
+  return t;
+}
+function pCierre(){
+  var d=D(),a=AREAS[st.area];
+  var t="Ya tengo redactados los cinco bloques de mi marco histórico (los pego abajo).\n\n"+contexto()+"\n"+
+  "Objetivo general: "+d.general+"\n\n"+
+  "Haz tres cosas, sin buscar fuentes nuevas:\n"+
+  "  1. Una introducción del capítulo de 120 a 180 palabras que anuncie el recorrido de los cinco bloques.\n"+
+  "  2. Un cierre de 200 a 300 palabras que explique cómo esta trayectoria histórica desemboca en el problema\n"+
+  "     que investigo en "+d.espacial+" durante "+d.temporal+".\n"+
+  "  3. Una sola lista de referencias en APA 7, en orden alfabético, sin duplicados.\n\n"+
+  "Señala entre [corchetes] cualquier contradicción de fechas entre bloques.\n\n"+
+  "BLOQUES:\n";
+  a.bloques.forEach(function(b,i){t+="\n--- Bloque "+(i+1)+". "+b.t+" ---\n[pega aquí el texto]\n";});
+  return t;
+}
+function pVerif(){
+  var d=D(),dato=$("dato").value.trim()||"[pega aquí la fecha, cita o reforma que quieres comprobar]";
+  return "Necesito verificar esta afirmación antes de citarla en mi tesina:\n\n  \""+dato+"\"\n\n"+
+  "Contexto: marco histórico de una tesina de "+AREAS[st.area].nombre+" sobre "+d.tema+".\n\n"+
+  "Busca la fuente primaria original, no blogs ni artículos que la citan. Dime:\n"+
+  "  · Si la afirmación es exacta, parcialmente exacta o falsa.\n"+
+  "  · Cuál es el documento original, con enlace directo.\n"+
+  "  · Si hay discrepancia de fechas entre fuentes, cuáles y por qué.\n"+
+  "  · La cita en APA 7 lista para usarse.\n";
+}
+
+/* ---------- componentes ---------- */
+function bloquePrompt(titulo,modo,texto,nombre){
+  var w=el("div","prompt"),h=el("div","prompt-h"),izq=el("div");
+  izq.appendChild(el("strong",null,titulo));
+  if(modo){izq.appendChild(document.createElement("br"));izq.appendChild(el("span","modo",modo));}
+  var acc=el("div","actions");
+  var c=el("button","btn sm","Copiar");c.type="button";
+  var s=el("div","status");s.style.margin="0";
+  c.onclick=function(){copiar(texto,s);};
+  acc.appendChild(c);
+  if(dl){var g=el("button","btn ghost sm","Descargar .txt");g.type="button";g.onclick=function(){descargar(texto,nombre,s);};acc.appendChild(g);}
+  h.appendChild(izq);h.appendChild(acc);
+  var o=el("pre","out",texto);
+  w.appendChild(h);w.appendChild(o);
+  var foot=el("div");foot.style.padding="0 14px 6px";foot.appendChild(s);w.appendChild(foot);
+  return w;
+}
+function lista(tag,cls,items){var l=el(tag,cls);items.forEach(function(x){var li=el("li");li.innerHTML=x;l.appendChild(li);});return l;}
+function listo(items){var d=el("div","listo");d.appendChild(el("strong",null,"Terminaste este paso cuando:"));var u=el("ul");items.forEach(function(x){u.appendChild(el("li",null,x));});d.appendChild(u);return d;}
+function navegacion(id){
+  var P=pasos(),a=el("div","actions");
+  var prev=el("button","btn ghost","Anterior");prev.type="button";prev.disabled=st.paso===0;
+  prev.onclick=function(){st.paso--;guardar();pintar();};
+  var sp=el("span","spacer");
+  var h=hechos(),ok=el("button","btn ok",h[id]?"Hecho ✓ · ir al siguiente":"Marcar como hecho y seguir");ok.type="button";
+  ok.onclick=function(){h[id]=true;if(st.paso<P.length-1)st.paso++;guardar();pintar();window.scrollTo({top:0,behavior:"smooth"});};
+  a.appendChild(prev);a.appendChild(sp);
+  if(h[id]){var u=el("button","btn ghost","Desmarcar");u.type="button";u.onclick=function(){delete h[id];guardar();pintar();};a.appendChild(u);}
+  a.appendChild(ok);
+  return a;
+}
+
+/* ---------- vistas ---------- */
+function pintar(){pintarRuta();var m=$("main");m.innerHTML="";var P=pasos(),p=P[st.paso];
+  m.appendChild(el("p","eyebrow","Paso "+(st.paso+1)+" de "+P.length+" · "+p.s));
+  m.appendChild(el("h2",null,p.t));
+  if(p.id==="datos")vistaDatos(m);
+  else if(p.id==="space")vistaSpace(m);
+  else if(p.id==="cierre")vistaCierre(m);
+  else vistaBloque(m,p.b);
+  m.appendChild(navegacion(p.id));
+  $("uid").textContent=uid();
+}
+
+function vistaDatos(m){
+  m.appendChild(el("p","lead","Sube tu anteproyecto para llenar los campos automáticamente, o escríbelos. Todos los prompts de la ruta se arman con estos datos."));
+  var dr=el("div","drop");dr.id="drop";
+  dr.innerHTML='<strong>Arrastra aquí tu anteproyecto</strong><span>Word (.docx) o texto (.txt, .md), hasta 15 MB. Se procesa en tu navegador.</span><br>';
+  var pk=el("button","btn ghost","Elegir archivo");pk.type="button";
+  var fi=document.createElement("input");fi.type="file";fi.id="file";fi.accept=".docx,.txt,.md,text/plain";fi.hidden=true;
+  pk.onclick=function(){fi.click();};fi.onchange=function(e){if(e.target.files[0])leer(e.target.files[0]);};
+  dr.appendChild(pk);dr.appendChild(fi);
+  ["dragenter","dragover"].forEach(function(ev){dr.addEventListener(ev,function(e){e.preventDefault();dr.classList.add("over");});});
+  ["dragleave","drop"].forEach(function(ev){dr.addEventListener(ev,function(e){e.preventDefault();dr.classList.remove("over");});});
+  dr.addEventListener("drop",function(e){var f=e.dataTransfer.files[0];if(f)leer(f);});
+  m.appendChild(dr);
+  var s=el("div","status");s.id="status";m.appendChild(s);
+  var f=el("div");
+  f.innerHTML=
+   '<label for="tema">Tema o título</label><input type="text" id="tema" placeholder="Título tentativo de la tesina">'+
+   '<label for="pregunta">Pregunta de investigación</label><textarea id="pregunta" rows="2" placeholder="Una sola pregunta, delimitada"></textarea>'+
+   '<label for="general">Objetivo general</label><textarea id="general" rows="2" placeholder="Verbo en infinitivo + qué + dónde"></textarea>'+
+   '<label for="especificos">Objetivos específicos</label><textarea id="especificos" rows="3" placeholder="Uno por línea"></textarea>'+
+   '<div class="two"><div><label for="espacial">Delimitación espacial</label><input type="text" id="espacial" placeholder="Zihuatanejo, Guerrero"></div>'+
+   '<div><label for="temporal">Periodo de análisis</label><input type="text" id="temporal" placeholder="2021-2026"></div></div>'+
+   '<div class="two"><div><label for="institucion">Institución</label><input type="text" id="institucion" placeholder="CESA"></div>'+
+   '<div><label for="alumno">Nombre del alumno</label><input type="text" id="alumno" placeholder="Opcional"></div></div>';
+  m.appendChild(f);
+  campos.forEach(function(c){var x=$(c);x.value=st.datos[c]||"";x.addEventListener("input",function(){st.datos[c]=x.value;guardar();$("uid").textContent=uid();});});
+  var nota=el("p","hint","El periodo de análisis solo acota el último bloque; los anteriores se remontan hasta donde haga falta.");nota.style.marginTop="14px";
+  m.appendChild(nota);
+  m.appendChild(listo(["Tema, pregunta y delimitación están completos","El área elegida a la izquierda es la de tu tesina"]));
+}
+
+function vistaSpace(m){
+  m.appendChild(el("p","lead","El Space guarda el contexto de tu tesina para no repetirlo en cada búsqueda. Todos los pasos siguientes se hacen dentro de él."));
+  m.appendChild(lista("ol","haz",[
+    "En Perplexity entra a <strong>Spaces</strong> y crea uno con el nombre de tu tesina.",
+    "Sube tu anteproyecto en los archivos del Space.",
+    "Copia el texto de abajo y pégalo en las <strong>instrucciones</strong> del Space.",
+    "Abre un hilo nuevo dentro del Space por cada bloque."]));
+  m.appendChild(bloquePrompt("Instrucciones del Space",null,pSpace(),"space"));
+  m.appendChild(listo(["El Space existe, tiene tu anteproyecto y las instrucciones pegadas"]));
+}
+
+function vistaBloque(m,i){
+  var b=AREAS[st.area].bloques[i];
+  m.appendChild(el("p","lead",b.r));
+  var fx=el("div","fichas");
+  fx.innerHTML='<span class="ficha"><b>Fuentes en Perplexity:</b> '+b.f+'</span><span class="ficha"><b>Extensión:</b> 500–700 palabras</span><span class="ficha"><b>Clave:</b> '+esc(b.k)+'</span>';
+  m.appendChild(fx);
+  m.appendChild(lista("ol","haz",[
+    "Abre un hilo nuevo en tu Space y elige las fuentes <strong>"+b.f+"</strong>.",
+    "Envía el prompt <strong>A</strong>. Abre cada enlace y descarta los que no cargan o no dicen lo que Perplexity afirma.",
+    "En el <strong>mismo hilo</strong>, envía el prompt <strong>B</strong>.",
+    "Pega el texto en tu Word, revisa lo marcado entre [corchetes] y verifica las fechas dudosas con el recuadro de la izquierda."]));
+  m.appendChild(bloquePrompt("A · Buscar fuentes","Fuentes: "+b.f,pBuscar(b,i),"b"+(i+1)+"-buscar"));
+  m.appendChild(bloquePrompt("B · Redactar el bloque","Mismo hilo, después de A",pRedactar(b,i),"b"+(i+1)+"-redactar"));
+  var al=el("details","alt");al.appendChild(el("summary",null,"¿El prompt A trae pocas fuentes? Usa Investigación profunda en su lugar"));
+  al.appendChild(bloquePrompt("A alternativo · Investigación profunda","Modo Investigación / Deep Research",pDeep(b,i),"b"+(i+1)+"-deep"));
+  m.appendChild(al);
+  var w=el("div","warn");w.innerHTML="<strong>Antes de pegar en tu tesina</strong>Perplexity cita fuentes reales, pero a veces solo lee el resumen. Confirma cada fecha en la fuente. La referencia es responsabilidad tuya.";
+  w.style.marginBottom="18px";m.appendChild(w);
+  m.appendChild(listo(b.ok.concat(["Cada fecha del texto tiene su cita y abriste cada enlace"])));
+}
+
+function vistaCierre(m){
+  m.appendChild(el("p","lead","Con los cinco bloques ya en tu Word, este paso da unidad al capítulo: lo presenta, lo cierra y junta las referencias."));
+  m.appendChild(lista("ol","haz",[
+    "Abre un hilo nuevo en tu Space.",
+    "Copia el prompt y sustituye cada <em>[pega aquí el texto]</em> por el bloque correspondiente.",
+    "Coloca la introducción al inicio del capítulo y el cierre al final.",
+    "Compara la lista de referencias con las citas del texto: cada cita debe tener su referencia y viceversa."]));
+  m.appendChild(bloquePrompt("Ensamble del capítulo","Sin búsqueda nueva",pCierre(),"cierre"));
+  m.appendChild(listo(["El capítulo tiene introducción, cinco bloques y cierre","No quedan [corchetes] sin resolver","La lista de referencias está completa y en orden alfabético"]));
+}
+
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+
+/* ---------- lectura del anteproyecto ---------- */
+function setStatus(e,msg,cls){if(!e)return;e.className="status"+(cls?" "+cls:"");e.textContent=msg;}
+function leer(f){
+  var s=$("status");
+  if(f.size>15*1024*1024){setStatus(s,"El archivo pesa más de 15 MB. Guárdalo de nuevo o escribe los datos.","err");return;}
+  var nom=f.name.toLowerCase();setStatus(s,"Leyendo "+f.name+"…");
+  if(/\.docx$/.test(nom)){
+    var r=new FileReader();
+    r.onload=function(){
+      if(typeof mammoth==="undefined"){setStatus(s,"No se pudo cargar el lector de Word. Escribe los datos a mano.","err");return;}
+      mammoth.extractRawText({arrayBuffer:r.result}).then(function(res){procesar(res.value);setStatus($("status"),"Listo. Se leyó "+f.name+"; revisa los campos.","ok");})
+      .catch(function(){setStatus(s,"El archivo no se pudo abrir. Guárdalo de nuevo como .docx y vuelve a intentar.","err");});
+    };
+    r.onerror=function(){setStatus(s,"No se pudo leer el archivo.","err");};
+    r.readAsArrayBuffer(f);
+  } else if(/\.(txt|md)$/.test(nom)){
+    var r2=new FileReader();
+    r2.onload=function(){procesar(r2.result);setStatus($("status"),"Listo. Se leyó "+f.name+"; revisa los campos.","ok");};
+    r2.readAsText(f,"utf-8");
+  } else setStatus(s,"Formato no admitido. Usa .docx, .txt o .md.","err");
+}
+function lim(s){return (s||"").replace(/\s+/g," ").trim();}
+function procesar(texto){
+  var L=texto.split(/\r?\n/).map(function(x){return x.trim();});
+  function idx(re){for(var i=0;i<L.length;i++){if(re.test(L[i]))return i;}return -1;}
+  function sig(i,n){var r=[];for(var k=i+1;k<L.length&&r.length<(n||1);k++){if(L[k])r.push(L[k]);}return r;}
+  function hasta(i,mx){var r=[];for(var k=i+1;k<L.length&&r.length<(mx||8);k++){
+    if(!L[k])continue;
+    if(/^(JUSTIFICACIÓN|CAPÍTULO|HIPÓTESIS|MARCO|PREGUNTA|DELIMITACIÓN|METODOLOG|REFERENCIAS)/i.test(L[k]))break;
+    r.push(L[k]);}return r;}
+  var i=idx(/^TEMA\s*:?\s*$/i),tema="";
+  if(i>=0)tema=sig(i,3).join(" ");
+  if(!tema){i=idx(/^\s*1\.?\s*Tema elegido/i);if(i>=0)tema=sig(i,1)[0]||"";}
+  if(!tema){for(var j=0;j<L.length;j++){if(L[j].length>25&&/[“”"]/.test(L[j])){tema=L[j];break;}}}
+  tema=lim(tema).replace(/^[“”"]|[“”"]\.?$/g,"");
+  i=idx(/PREGUNTA DE INVESTIGACIÓN/i);var preg="";
+  if(i>=0){preg=hasta(i,4).filter(function(x){return x.indexOf("?")>-1;}).join(" ")||sig(i,2).join(" ");}
+  if(!preg){for(var q=0;q<L.length;q++){if(L[q].indexOf("¿")>-1&&L[q].indexOf("?")>-1){preg=L[q];break;}}}
+  i=idx(/OBJETIVO GENERAL/i);var gen=i>=0?sig(i,2).join(" "):"";
+  i=idx(/OBJETIVOS? ESPEC[IÍ]FICOS?/i);var esp=i>=0?hasta(i,10):[];
+  i=idx(/Delimitación espacial/i);var sp=i>=0?lim(sig(i,2).join(" ")):"";
+  i=idx(/Delimitación temporal/i);var tp=i>=0?lim(sig(i,2).join(" ")):"";
+  if(!tp){var m=texto.match(/\b20\d{2}\s*[–\-—]\s*20\d{2}\b/);if(m)tp=m[0];}
+  var d=st.datos;
+  if(tema)d.tema=tema;if(preg)d.pregunta=lim(preg);if(gen)d.general=lim(gen);
+  if(esp.length)d.especificos=esp.map(function(x){return lim(x).replace(/^\d+[\.\)]\s*/,"");}).join("\n");
+  if(sp)d.espacial=sp;if(tp)d.temporal=tp;
+  detectar(texto);guardar();pintar();
+}
+function detectar(texto){
+  var t=texto.toLowerCase(),mejor=st.area,max=0;
+  Object.keys(PALABRAS).forEach(function(k){var s=0;PALABRAS[k].forEach(function(w){s+=t.split(w).length-1;});if(s>max){max=s;mejor=k;}});
+  if(max>3){st.area=mejor;$("area").value=mejor;}
+}
+
+/* ---------- copiar y descargar ---------- */
+function copiar(t,s){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(function(){setStatus(s,"Copiado. Pégalo en Perplexity.","ok");}).catch(function(){fallback(t,s);});
+  } else fallback(t,s);
+}
+function fallback(t,s){
+  var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();
+  try{document.execCommand("copy");setStatus(s,"Copiado.","ok");}catch(e){setStatus(s,"El navegador bloqueó el copiado. Selecciona el texto y cópialo a mano.","err");}
+  ta.parentNode.removeChild(ta);
+}
+var dl=null;
+if(!(window.claude&&typeof window.claude.use==="function")){
+  /* Fuera de Claude (GitHub Pages u otro hosting): descarga directa con Blob */
+  dl={save:function(o){return new Promise(function(ok){
+    var b=new Blob([o.data],{type:"text/plain;charset=utf-8"}),u=URL.createObjectURL(b),a=document.createElement("a");
+    a.href=u;a.download=o.filename;document.body.appendChild(a);a.click();a.parentNode.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(u);},1000);ok();});}};
+}
+if(window.claude&&typeof window.claude.use==="function"){
+  window.claude.use("downloads").then(function(x){if(x&&typeof x.save==="function"){dl=x;pintar();}}).catch(function(){});
+}
+function descargar(t,nombre,s){
+  var texto="Control de metadatos\nIA utilizada: Claude (Anthropic) para el desarrollo; Perplexity para la investigacion\n"+
+    "Catedratico/Autor: Luis Arturo Lopez Vergara\nCorreo: luislopezv71@gmail.com\nIdentificador: "+uid()+"\n\n"+
+    "----------------------------------------------------------------------\n\n"+t;
+  setStatus(s,"Preparando la descarga…");
+  dl.save({filename:"marco-historico-"+st.area+"-"+nombre+".txt",data:texto}).then(function(){setStatus(s,"Archivo guardado.","ok");})
+  .catch(function(e){var c=e&&e.code;setStatus(s,c==="declined"?"Descarga cancelada.":"No se pudo descargar. Usa Copiar.","err");});
+}
+
+/* ---------- verificación ---------- */
+$("verifBtn").onclick=function(){
+  var m=$("main");m.innerHTML="";pintarRuta();
+  m.appendChild(el("p","eyebrow","Herramienta · fuera de la ruta"));
+  m.appendChild(el("h2",null,"Verificar un dato"));
+  m.appendChild(el("p","lead","Envíalo en un hilo aparte dentro de tu Space, con fuentes Web. Si el resultado es “parcialmente exacta” o “falsa”, corrige tu texto antes de seguir."));
+  m.appendChild(bloquePrompt("Verificación","Fuentes: Web",pVerif(),"verificar"));
+  var v=el("button","btn ghost","Volver al paso "+(st.paso+1));v.type="button";v.onclick=pintar;
+  m.appendChild(v);
+};
+
+/* ---------- estado ---------- */
+function slug(s){return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9\s-]/g,"").trim().split(/\s+/).slice(0,4).join("-")||"marco-historico";}
+function uid(){var d=D();var t=d.tema==="[escribe tu tema]"?"marco-historico":d.tema;return slug(t)+"-"+slug(d.institucion).toUpperCase()+"-2026-APP-V2";}
+function guardar(){try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}}
+function restaurar(){
+  try{
+    var o=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(o){if(AREAS[o.area])st.area=o.area;if(typeof o.paso==="number")st.paso=o.paso;if(o.hechos)st.hechos=o.hechos;if(o.datos)st.datos=o.datos;}
+    else{
+      var v=JSON.parse(localStorage.getItem("gmh.perplexity.v1")||"null");
+      if(v){if(AREAS[v.area])st.area=v.area;campos.forEach(function(c){if(typeof v[c]==="string")st.datos[c]=v[c];});}
+    }
+  }catch(e){}
+  if(st.paso<0||st.paso>=pasos().length)st.paso=0;
+}
+(function init(){
+  restaurar();
+  var sel=$("area");
+  Object.keys(AREAS).forEach(function(k){var o=el("option",null,AREAS[k].nombre);o.value=k;sel.appendChild(o);});
+  sel.value=st.area;
+  sel.onchange=function(){st.area=sel.value;if(st.paso>0&&!hechos()[pasos()[st.paso].id])st.paso=Math.min(st.paso,pasos().length-1);guardar();pintar();};
+  pintar();
+})();
+</script>
+</body>
+</html>
