@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Guía de uso de la herramienta Marco histórico con Perplexity: ruta de ocho pasos por área para la tesina.">
+<meta name="author" content="Luis Arturo López Vergara">
+<meta name="keywords" content="tesina, marco histórico, Perplexity, APA 7, investigación documental, CESA">
+<title>Guía del marco histórico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;0,700;1,400&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16222a; --petrol:#14343F; --head:#14343F; --ochre:#9A6B1E;
+  --paper:#F4F1E9; --surface:#FFFFFF; --bg:#EFEDE6;
+  --line:#D6D2C6; --muted:#5F5C54; --teal:#1E6F7A; --err:#A3321E; --on-accent:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ink:#E8E5DC; --petrol:#9FC4CE; --head:#122A33; --ochre:#D9A94F;
+    --paper:#1B2429; --surface:#141B20; --bg:#0F1519; --line:#2C373D; --muted:#9BA5A9; --teal:#6FB5BF; --err:#E58B72; --on-accent:#0F1519;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#E8E5DC; --petrol:#9FC4CE; --head:#122A33; --ochre:#D9A94F;
+  --paper:#1B2429; --surface:#141B20; --bg:#0F1519; --line:#2C373D; --muted:#9BA5A9; --teal:#6FB5BF; --err:#E58B72; --on-accent:#0F1519;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px}
+a{color:var(--teal)}
+header.top{background:var(--head);padding-block:40px 34px}
+.tag{font-size:12.5px;letter-spacing:.06em;color:#C49A4A;margin-bottom:10px;font-weight:600;text-transform:uppercase}
+h1{font-family:"Spectral",Georgia,serif;font-weight:700;font-size:clamp(28px,4.4vw,42px);line-height:1.1;margin:0 0 10px;color:#F4F1E9;text-wrap:balance}
+header.top p{margin:0 0 20px;max-width:64ch;color:#C8D6DA;font-size:16px}
+.cta{display:inline-block;background:#C49A4A;color:#14343F;font-weight:700;text-decoration:none;padding:11px 18px;border-radius:2px;font-size:14.5px}
+.cta:hover{background:#D9B066}
+.cta.ghost{background:transparent;color:#F4F1E9;border:1px solid #4A6A74;margin-left:8px}
+
+.layout{display:grid;grid-template-columns:220px 1fr;gap:40px;padding-block:36px 60px;align-items:start}
+@media (max-width:860px){.layout{grid-template-columns:1fr;gap:20px}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);font-size:14px}
+@media (max-width:860px){nav.toc{position:static;background:var(--surface);border:1px solid var(--line);padding:14px 16px;border-radius:3px}}
+nav.toc p{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 10px}
+nav.toc ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+nav.toc a{color:var(--ink);text-decoration:none}
+nav.toc a:hover{color:var(--ochre)}
+
+main section{margin-bottom:44px;max-width:72ch}
+main section.wide{max-width:none}
+h2{font-family:"Spectral",Georgia,serif;font-size:clamp(23px,3vw,29px);font-weight:600;margin:0 0 12px;color:var(--petrol);line-height:1.2;text-wrap:balance;scroll-margin-top:20px}
+h3{font-family:"Spectral",Georgia,serif;font-size:19px;font-weight:600;margin:22px 0 6px;color:var(--petrol)}
+p{margin:0 0 14px}
+.eyebrow{font-family:"Spectral",Georgia,serif;font-style:italic;color:var(--ochre);font-size:15px;margin:0 0 2px}
+
+.pasos{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column;gap:0;counter-reset:p}
+.pasos li{display:grid;grid-template-columns:40px 1fr;gap:16px;padding:16px 0;border-top:1px solid var(--line)}
+.pasos li:last-child{border-bottom:1px solid var(--line)}
+.pasos .n{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--ochre);color:var(--ochre);display:grid;place-items:center;font-family:"Spectral",Georgia,serif;font-weight:700;font-size:16px}
+.pasos h3{margin:4px 0 4px}
+.pasos p{margin:0 0 6px;font-size:15px}
+.pasos .res{font-size:13.5px;color:var(--muted)}
+.pasos .res b{color:var(--ink);font-weight:600}
+
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+@media (max-width:620px){.duo{grid-template-columns:1fr}}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:16px 18px}
+.box strong{display:block;font-size:14px;margin-bottom:4px}
+.box .k{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);font-weight:700}
+.box p{font-size:14.5px;margin:6px 0 0}
+
+pre{background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:14px 16px;font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;font-size:12.6px;line-height:1.6;white-space:pre-wrap;word-break:break-word;margin:12px 0 16px}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;background:var(--paper);padding:1px 5px;border-radius:2px}
+
+.tabla{overflow-x:auto;border:1px solid var(--line);border-radius:3px;background:var(--surface);margin-top:14px}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:13.5px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font-weight:600;background:var(--paper);font-size:13px}
+td:first-child{font-family:"Spectral",Georgia,serif;font-weight:700;color:var(--ochre);width:48px;text-align:center}
+tr:last-child td{border-bottom:0}
+
+.aviso{border-left:3px solid var(--ochre);background:var(--surface);padding:14px 18px;margin:16px 0}
+.aviso.rojo{border-left-color:var(--err)}
+.aviso strong{display:block;font-family:"Spectral",Georgia,serif;font-size:16px;margin-bottom:4px;color:var(--petrol)}
+ul.check{list-style:none;padding:0;margin:10px 0 0}
+ul.check li{padding-left:26px;position:relative;margin-bottom:8px;font-size:15px}
+ul.check li::before{content:"";position:absolute;left:2px;top:5px;width:12px;height:12px;border:1.5px solid var(--teal);border-radius:2px}
+
+details{border-top:1px solid var(--line);padding:12px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font-weight:600;font-size:15px}
+details p{margin:8px 0 0;font-size:15px}
+
+.meta{border-top:1px solid var(--line);padding-block:18px 60px;font-size:12.5px;color:var(--muted)}
+.meta dl{display:grid;grid-template-columns:auto 1fr;gap:3px 16px;margin:8px 0 0}
+.meta dt{font-weight:600;color:var(--ink)}
+.meta dd{margin:0;word-break:break-word}
+@media (max-width:560px){.meta dl{grid-template-columns:1fr;gap:1px}.meta dd{margin-bottom:7px}.cta.ghost{margin:8px 0 0}}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="tag">Apoyo a la asesoría de tesina · Guía de uso</div>
+    <h1>Cómo usar la ruta del marco histórico</h1>
+    <p>La herramienta convierte el Capítulo I en ocho pasos en orden. Esta guía explica qué hace cada paso, cómo usar los prompts en Perplexity y qué revisar antes de entregar.</p>
+    <a class="cta" href="./index.html">Abrir la herramienta</a><a class="cta ghost" href="#faq">Preguntas frecuentes</a>
+  </div>
+</header>
+
+<div class="wrap layout">
+  <nav class="toc" aria-label="Contenido de la guía">
+    <p>Contenido</p>
+    <ol>
+      <li><a href="#que-es">Qué es</a></li>
+      <li><a href="#antes">Antes de empezar</a></li>
+      <li><a href="#ruta">Los ocho pasos</a></li>
+      <li><a href="#bloque">Cómo trabajar un bloque</a></li>
+      <li><a href="#areas">Bloques por área</a></li>
+      <li><a href="#verificar">Verificar un dato</a></li>
+      <li><a href="#revision">Lista de revisión final</a></li>
+      <li><a href="#asesor">Para el asesor</a></li>
+      <li><a href="#faq">Preguntas frecuentes</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="que-es">
+      <p class="eyebrow">Qué es</p>
+      <h2>Una ruta, no un generador de textos</h2>
+      <p>La herramienta lee tu anteproyecto y arma los prompts que vas a pegar en Perplexity, ya con tu tema, pregunta, lugar y periodo. Perplexity busca fuentes reales y redacta con ellas; tú revisas cada enlace y pegas el texto en tu Word.</p>
+      <p>El capítulo se divide en <strong>cinco bloques cronológicos</strong>, del origen del tema a su situación actual. Cada área (Derecho, Administración, Educación, Psicología y Salud) tiene sus propios bloques y sus propios sitios de consulta.</p>
+      <div class="duo">
+        <div class="box"><span class="k">Lo que sí hace</span><p>Ordena el trabajo, arma prompts precisos, indica qué fuentes usar y cuándo terminaste cada paso.</p></div>
+        <div class="box"><span class="k">Lo que no hace</span><p>No se conecta a Perplexity ni garantiza que las fechas sean correctas. La verificación es tuya.</p></div>
+      </div>
+    </section>
+
+    <section id="antes">
+      <p class="eyebrow">Antes de empezar</p>
+      <h2>Qué necesitas</h2>
+      <ul class="check">
+        <li>Tu anteproyecto en Word (.docx) o en texto (.txt), con tema, pregunta, objetivos y delimitación.</li>
+        <li>Una cuenta de Perplexity con acceso a <strong>Spaces</strong>.</li>
+        <li>Un documento de Word abierto donde irás pegando cada bloque.</li>
+        <li>El mismo navegador y equipo durante todo el trabajo: ahí se guarda tu avance.</li>
+      </ul>
+    </section>
+
+    <section id="ruta">
+      <p class="eyebrow">La ruta</p>
+      <h2>Los ocho pasos</h2>
+      <p>La barra lateral de la herramienta muestra los ocho pasos y tu avance. Al terminar uno, presiona <strong>Marcar como hecho y seguir</strong>.</p>
+      <ol class="pasos">
+        <li><span class="n">1</span><div><h3>Tus datos</h3><p>Arrastra tu anteproyecto o escribe los datos. La herramienta llena los campos y propone el área; corrige lo que haga falta.</p><p class="res"><b>Terminas cuando:</b> tema, pregunta y delimitación están completos y el área es la correcta.</p></div></li>
+        <li><span class="n">2</span><div><h3>Preparar el Space</h3><p>Crea un Space en Perplexity con el nombre de tu tesina, sube tu anteproyecto y pega las instrucciones que genera la herramienta. Se hace una sola vez.</p><p class="res"><b>Terminas cuando:</b> el Space tiene el anteproyecto y las instrucciones.</p></div></li>
+        <li><span class="n">3–7</span><div><h3>Bloques 1 a 5</h3><p>Cada bloque se trabaja en un hilo nuevo del Space con dos prompts: <strong>A</strong> busca fuentes y <strong>B</strong> redacta con ellas. Resultado: entre 500 y 700 palabras con citas APA 7.</p><p class="res"><b>Terminas cuando:</b> se cumplen los criterios del recuadro verde de ese bloque.</p></div></li>
+        <li><span class="n">8</span><div><h3>Ensamblar el capítulo</h3><p>Pegas los cinco bloques en un solo prompt y Perplexity escribe la introducción, el cierre ligado a tu pregunta y una lista única de referencias.</p><p class="res"><b>Terminas cuando:</b> el capítulo tiene introducción, cinco bloques, cierre y referencias sin duplicados.</p></div></li>
+      </ol>
+    </section>
+
+    <section id="bloque">
+      <p class="eyebrow">El paso que más se repite</p>
+      <h2>Cómo trabajar un bloque</h2>
+      <h3>1. Abre un hilo nuevo y elige las fuentes</h3>
+      <p>La ficha del bloque indica si debes usar fuentes <strong>Académico</strong> (artículos y revistas) o <strong>Web</strong> (DOF, SCJN, INEGI, SEP y otros sitios oficiales). Cámbialo en Perplexity antes de enviar.</p>
+      <h3>2. Envía el prompt A y revisa los enlaces</h3>
+      <p>Pide un máximo de seis fuentes en orden cronológico, cada una con cita APA 7, enlace y fecha exacta. Abre cada enlace: descarta los que no cargan o no dicen lo que Perplexity afirma.</p>
+      <pre>Bloque 2 de 5 de mi marco histórico: Constitución y ley que hoy rige.
+
+Tema: …   Pregunta: …   Ámbito: Zihuatanejo, Guerrero · Periodo: 2021-2026
+Necesito reconstruir: cuándo el tema adquiere rango constitucional…
+Prioriza estos sitios: diputados.gob.mx, dof.gob.mx, …
+
+Entrégame máximo 6 fuentes, en orden cronológico…</pre>
+      <h3>3. En el mismo hilo, envía el prompt B</h3>
+      <p>Perplexity redacta usando solo las fuentes que ya encontró y marca entre <code>[corchetes]</code> lo que no pudo respaldar. No abras un hilo nuevo para este paso: perdería las fuentes.</p>
+      <h3>4. Pega en Word y limpia</h3>
+      <p>Resuelve cada corchete: verifícalo con la herramienta de verificación o elimínalo. Si el prompt A trajo pocas fuentes, abre el desplegable <em>Investigación profunda</em> y usa ese prompt en su lugar.</p>
+    </section>
+
+    <section id="areas" class="wide">
+      <p class="eyebrow">Estructura</p>
+      <h2>Los cinco bloques de cada área</h2>
+      <p style="max-width:72ch">Los bloques van del origen del tema a su situación actual. El periodo de análisis de tu anteproyecto solo acota el bloque 5.</p>
+      <div class="tabla">
+        <table>
+          <thead><tr><th>#</th><th>Derecho</th><th>Administración y Contaduría</th><th>Ciencias de la Educación</th><th>Psicología</th><th>Salud y Enfermería</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Antecedentes remotos y recepción en México</td><td>Origen de la práctica y escuelas administrativas</td><td>Origen del problema y corrientes pedagógicas</td><td>Origen del constructo y escuelas psicológicas</td><td>Origen del problema y conocimiento clínico</td></tr>
+            <tr><td>2</td><td>Constitución y ley que hoy rige</td><td>Llegada a México y contexto económico</td><td>Sistema educativo mexicano y artículo 3º</td><td>Medición y criterios diagnósticos</td><td>El sistema de salud mexicano ante el problema</td></tr>
+            <tr><td>3</td><td>Reformas y criterios de los tribunales</td><td>Marco normativo y evolución del sector</td><td>Planes de estudio y práctica en el aula</td><td>La psicología en México e intervención</td><td>Normatividad y guías de práctica</td></tr>
+            <tr><td>4</td><td>Contexto social y referente comparado</td><td>Trayectoria local o de la organización</td><td>Referentes internacionales y contexto social</td><td>Ética, regulación y contexto social</td><td>Modelos de cuidado y evidencia internacional</td></tr>
+            <tr><td>5</td><td>Situación actual y problemas heredados</td><td>Situación actual y herencia del pasado</td><td>Situación actual y pendientes</td><td>Estado actual y debates abiertos</td><td>Contexto epidemiológico y retos actuales</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="verificar">
+      <p class="eyebrow">Herramienta de apoyo</p>
+      <h2>Verificar un dato</h2>
+      <p>En la barra lateral hay un recuadro siempre visible. Escribe la afirmación que dudas, por ejemplo una fecha de publicación en el DOF, y presiona <strong>Generar prompt de verificación</strong>. Envíalo en un hilo aparte con fuentes Web.</p>
+      <p>Perplexity responde si la afirmación es <em>exacta</em>, <em>parcialmente exacta</em> o <em>falsa</em>, con el documento original y la cita APA 7. Si no es exacta, corrige tu texto antes de avanzar.</p>
+    </section>
+
+    <section id="revision">
+      <p class="eyebrow">Antes de entregar</p>
+      <h2>Lista de revisión final</h2>
+      <ul class="check">
+        <li>Cada fecha del capítulo tiene su cita en el texto.</li>
+        <li>Abriste cada enlace y la fuente dice lo que se afirma.</li>
+        <li>No queda ningún <code>[corchete]</code> sin resolver.</li>
+        <li>Los bloques están en orden cronológico y no repiten contenido.</li>
+        <li>El cierre conecta la historia con tu pregunta de investigación.</li>
+        <li>Cada cita tiene su referencia, y cada referencia se cita en el texto.</li>
+        <li>Las referencias están en APA 7 y en orden alfabético.</li>
+      </ul>
+      <div class="aviso rojo"><strong>Advertencia académica</strong>En un capítulo hecho de fechas, una fecha inventada arruina el trabajo. Perplexity cita fuentes reales, pero a veces solo lee el resumen. La referencia es responsabilidad tuya, no de la herramienta.</div>
+    </section>
+
+    <section id="asesor">
+      <p class="eyebrow">Para el catedrático</p>
+      <h2>Cómo usarla en la asesoría</h2>
+      <p>Pide al alumno que muestre la barra de avance en cada sesión: indica en qué paso va sin revisar todo el capítulo. Los recuadros de <em>Terminaste este paso cuando…</em> sirven como lista de cotejo para aprobar cada bloque.</p>
+      <p>Una secuencia práctica es revisar un bloque por sesión: el alumno llega con el texto en Word y los enlaces abiertos, y se verifican en voz alta dos o tres fechas al azar.</p>
+    </section>
+
+    <section id="faq">
+      <p class="eyebrow">Dudas comunes</p>
+      <h2>Preguntas frecuentes</h2>
+      <details><summary>¿Mis datos se envían a algún servidor?</summary><p>No. El anteproyecto se lee en tu navegador y el avance se guarda solo en ese navegador. La herramienta no se comunica con Perplexity; tú copias y pegas.</p></details>
+      <details><summary>Cambié de computadora y perdí mi avance.</summary><p>El avance vive en el navegador donde trabajaste. En el equipo nuevo vuelve a subir tu anteproyecto y marca como hechos los pasos que ya terminaste.</p></details>
+      <details><summary>La herramienta eligió mal mi área.</summary><p>La detección se basa en palabras frecuentes del anteproyecto. Cámbiala en el selector de la barra lateral; tu avance de cada área se guarda por separado.</p></details>
+      <details><summary>No se leyó bien mi archivo de Word.</summary><p>Revisa que los apartados se llamen como en el formato (TEMA, PREGUNTA DE INVESTIGACIÓN, OBJETIVO GENERAL…). Si aun así falla, escribe los datos directamente en los campos.</p></details>
+      <details><summary>¿Puedo cambiar el orden de los bloques?</summary><p>El orden es cronológico y cada prompt B cierra enlazando con el bloque siguiente. Si un bloque no aplica a tu tema, coméntalo con tu asesor antes de omitirlo.</p></details>
+      <details><summary>Perplexity me devolvió menos de seis fuentes.</summary><p>Es normal en temas locales. Usa el prompt de Investigación profunda del mismo bloque, o pide en el hilo que amplíe la búsqueda a fuentes Académico o Web según falte.</p></details>
+    </section>
+  </main>
+</div>
+
+<div class="wrap meta">
+  <strong>Control de metadatos</strong>
+  <dl>
+    <dt>IA utilizada</dt><dd>Claude (Anthropic) para el desarrollo; Perplexity para la investigación documental</dd>
+    <dt>Catedrático / Autor</dt><dd>Luis Arturo López Vergara</dd>
+    <dt>Correo electrónico</dt><dd>luislopezv71@gmail.com</dd>
+    <dt>Fecha de desarrollo</dt><dd>18 de septiembre de 2026 · guía v2: 23 de septiembre de 2026</dd>
+    <dt>Identificador único</dt><dd>marco-historico-CESA-2026-GUIA-V2</dd>
+  </dl>
+</div>
+</body>
+</html>
